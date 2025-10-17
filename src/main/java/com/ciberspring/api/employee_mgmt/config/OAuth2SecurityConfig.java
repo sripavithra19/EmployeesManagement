@@ -12,29 +12,24 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
 public class OAuth2SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests(authorize -> authorize
-                // Use group-based authorization
-                .requestMatchers("/employees/**").hasAuthority("HR_EMPLOYEES_ACCESS")
-                .anyRequest().denyAll()
-            )
-            .oauth2ResourceServer(oauth2 -> oauth2
-                .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
-            );
-        return http.build();
-    }
+	
+	  @Bean public SecurityFilterChain securityFilterChain(HttpSecurity http)
+	  throws Exception { http.authorizeHttpRequests(authorize -> authorize 
+	  .requestMatchers("/employees/address/**").permitAll()
+	  .requestMatchers("/employees").hasAuthority("HR_EMPLOYEES_ACCESS") 
+	  .requestMatchers("/employees/**").hasAuthority("HR_EMPLOYEES_ACCESS").
+	  anyRequest().denyAll()) .oauth2ResourceServer( oauth2 -> oauth2.jwt(jwt ->
+	  jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))) .csrf(csrf ->
+	  csrf.disable()); // ADD THIS LINE for POST requests
+	  
+	  return http.build(); }
+	 
 
 	private JwtAuthenticationConverter jwtAuthenticationConverter() {
 		JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
