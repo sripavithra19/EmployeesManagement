@@ -1,5 +1,5 @@
 package com.ciberspring.api.employee_mgmt.controller;
-
+ 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -7,22 +7,22 @@ import org.springframework.web.bind.annotation.*;
 import com.ciberspring.api.employee_mgmt.entity.Employee;
 import com.ciberspring.api.employee_mgmt.service.EmployeeService;
 import com.ciberspring.api.employee_mgmt.service.impl.GooglePlacesService;
-
+ 
 import java.util.List;
 import java.util.Map;
-
+ 
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
-
+ 
     private final EmployeeService employeeService;
     private final GooglePlacesService googlePlacesService;
-
+ 
     public EmployeeController(EmployeeService employeeService, GooglePlacesService googlePlacesService) {
         this.employeeService = employeeService;
         this.googlePlacesService = googlePlacesService;
     }
-
+ 
     @PostMapping
     public ResponseEntity<?> createEmployee(@RequestBody Map<String, String> employeeData) {
         try {
@@ -70,10 +70,10 @@ public class EmployeeController {
         System.out.println("Groups: " + groups);
         System.out.println("Has HR_EMPLOYEES_ACCESS: " + (groups != null && groups.contains("HR_EMPLOYEES_ACCESS")));
         System.out.println("=========================");
-
+ 
         return ResponseEntity.ok(employeeService.getAllEmployees());
     }
-
+ 
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable int id) {
         try {
@@ -83,12 +83,12 @@ public class EmployeeController {
             return ResponseEntity.notFound().build();
         }
     }
-
+ 
     @GetMapping("/address/predictions")
     public String getAddressPredictions(@RequestParam String input) {
         return googlePlacesService.getPlacePredictions(input);
     }
-
+ 
     @GetMapping("/address/details")
     public String getAddressDetails(@RequestParam String placeId) {
         return googlePlacesService.getPlaceDetails(placeId);
