@@ -19,23 +19,16 @@ import java.util.List;
 public class OAuth2SecurityConfig {
 
 	
-	@Bean 
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception { 
-	    http
-	        .authorizeHttpRequests(authorize -> authorize 
-	            .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-	            .requestMatchers("/personal-details").permitAll() // Allow public access temporarily
-	            .requestMatchers("/employees/address/**").permitAll()
-	            .requestMatchers("/employees/personal-details").authenticated()
-	            .requestMatchers("/employees").hasAuthority("HR_EMPLOYEES_ACCESS") 
-	            .requestMatchers("/employees/**").hasAuthority("HR_EMPLOYEES_ACCESS")
-	            .anyRequest().denyAll()) 
-	        .oauth2ResourceServer(oauth2 -> oauth2
-	            .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
-	        .csrf(csrf -> csrf.disable());
-	    
-	    return http.build(); 
-	}
+	  @Bean public SecurityFilterChain securityFilterChain(HttpSecurity http)
+	  throws Exception { http.authorizeHttpRequests(authorize -> authorize 
+	  .requestMatchers("/employees/address/**").permitAll()
+	  .requestMatchers("/employees").hasAuthority("HR_EMPLOYEES_ACCESS") 
+	  .requestMatchers("/employees/**").hasAuthority("HR_EMPLOYEES_ACCESS").
+	  anyRequest().denyAll()) .oauth2ResourceServer( oauth2 -> oauth2.jwt(jwt ->
+	  jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))) .csrf(csrf ->
+	  csrf.disable()); // ADD THIS LINE for POST requests
+	  
+	  return http.build(); }
 	 
 
 	private JwtAuthenticationConverter jwtAuthenticationConverter() {
